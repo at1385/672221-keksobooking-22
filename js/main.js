@@ -72,3 +72,7 @@ const getRandomArray = (length, values, unique = false) => {
 
   return array;
 }
+
+const getRandomFloatNumber = (min, max, precision) => {
+  return window._.random(min, max).toFixed(precision);
+}
