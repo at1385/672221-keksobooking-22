@@ -41,3 +41,7 @@ const Y_MIN = 139.70000;
 const Y_MAX = 139.80000;
 
 const MAX_COUNT = 10;
+
+const getRandomArrayElement = (array) => {
+  return array[window._.random(0, array.length - 1)];
+}
