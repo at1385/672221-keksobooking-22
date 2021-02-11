@@ -76,3 +76,31 @@ const getRandomArray = (length, values, unique = false) => {
 const getRandomFloatNumber = (min, max, precision) => {
   return window._.random(min, max).toFixed(precision);
 }
+
+const createAd = () => {
+  const coordinateX = getRandomFloatNumber(X_MIN, X_MAX, 5);
+  const coordinateY = getRandomFloatNumber(Y_MIN, Y_MAX, 5);
+
+  return {
+    author: {
+      avatar: `img/avatars/user0${getRandomArrayElement(AVATARS)}.png`,
+    },
+    offer: {
+      title: 'Загаловок',
+      address: `${coordinateX}, ${coordinateY}`,
+      price: 100,
+      type: getRandomArrayElement(APARTMENT_TYPES),
+      rooms: 2,
+      guests: 2,
+      checkin: getRandomArrayElement(CHECK_TIMES),
+      checkout: getRandomArrayElement(CHECK_TIMES),
+      features: getRandomArray(APARTMENT_FEATURES.length, APARTMENT_FEATURES, true),
+      description: 'Описание',
+      photos: getRandomArray(MAX_COUNT, APARTMENT_PHOTOS),
+    },
+    location: {
+      x: coordinateX,
+      y: coordinateY,
+    },
+  }
+};
