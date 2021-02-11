@@ -53,3 +53,22 @@ const checkDoubleArrayElement = (array, element) => {
     }
   }
 }
+
+const getRandomArray = (length, values, unique = false) => {
+  const array = [];
+
+  new Array(window._.random(length)).fill(null).map((element) => {
+    element = getRandomArrayElement(values);
+    array.push(element);
+
+    if (unique && array.length > 1) {
+      while (checkDoubleArrayElement(array, element)) {
+        array.pop();
+        element = getRandomArrayElement(values);
+        array.push(element);
+      }
+    }
+  });
+
+  return array;
+}
