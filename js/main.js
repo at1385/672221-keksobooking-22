@@ -45,3 +45,11 @@ const MAX_COUNT = 10;
 const getRandomArrayElement = (array) => {
   return array[window._.random(0, array.length - 1)];
 }
+
+const checkDoubleArrayElement = (array, element) => {
+  for (let i = 0; i < array.length - 1; i++) {
+    if (array[i] === element) {
+      return true;
+    }
+  }
+}
