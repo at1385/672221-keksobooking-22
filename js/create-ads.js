@@ -44,5 +44,6 @@ const createAd = () => {
   }
 };
 
-const ads = new Array(MAX_COUNT).fill(null).map(() => createAd());
-ads;
+const createAds = () => new Array(MAX_COUNT).fill(null).map(() => createAd());
+
+export {createAds};
