@@ -16,6 +16,19 @@ const COORDINATE_PRECISION = 5;
 
 const MAX_COUNT = 10;
 
+const translateApartmentType = (apartmentType) => {
+  switch (apartmentType) {
+    case 'palace':
+      return 'Дворец';
+    case 'flat':
+      return 'Квартира';
+    case 'house':
+      return 'Дом';
+    case 'bungalow':
+      return 'Бунгало';
+  }
+};
+
 const createAd = () => {
   const coordinateX = getRandomNumber(X_MIN, X_MAX, true, COORDINATE_PRECISION);
   const coordinateY = getRandomNumber(Y_MIN, Y_MAX, true, COORDINATE_PRECISION);
@@ -28,7 +41,7 @@ const createAd = () => {
       title: 'Загаловок',
       address: `${coordinateX}, ${coordinateY}`,
       price: 100,
-      type: getRandomArrayElement(APARTMENT_TYPES),
+      type: translateApartmentType(getRandomArrayElement(APARTMENT_TYPES)),
       rooms: 2,
       guests: 2,
       checkin: getRandomArrayElement(CHECK_TIMES),
