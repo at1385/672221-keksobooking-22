@@ -33,4 +33,8 @@ const getRandomNumber = (min, max, isFloat = false, precision) => {
   return +window._.random(min, max, isFloat).toFixed(precision);
 };
 
-export {getRandomArrayElement, getRandomArray, getRandomNumber};
+const hideNode = (node) => {
+  node.style.display = 'none';
+}
+
+export {getRandomArrayElement, getRandomArray, getRandomNumber, hideNode};
