@@ -28,3 +28,18 @@ const setAdMinPrice = () => {
 adFormType.addEventListener('change', () => {
   setAdMinPrice();
 });
+
+const adFormTimeIn = adForm.querySelector('#timein');
+const adFormTimeOut = adForm.querySelector('#timeout');
+
+const onAdFormTimeInChange = () => {
+  adFormTimeOut.value = adFormTimeIn.value;
+};
+
+const onAdFormTimeOutChange = () => {
+  adFormTimeIn.value = adFormTimeOut.value;
+};
+
+adFormTimeIn.addEventListener('change', onAdFormTimeInChange);
+
+adFormTimeOut.addEventListener('change',onAdFormTimeOutChange);
