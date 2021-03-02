@@ -59,4 +59,4 @@ const createAd = () => {
 
 const createAds = () => new Array(MAX_COUNT).fill(null).map(() => createAd());
 
-export {createAds};
+export {APARTMENT_TYPES, createAds};
