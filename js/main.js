@@ -1,3 +1,3 @@
 import './create-ads.js';
-import './render-ads.js';
+import './render-ad-card.js';
 import './form.js';
