@@ -3,3 +3,4 @@ import './render-ad-card.js';
 import './form.js';
 import './deactivator.js';
 import './activator.js';
+import './filters.js';
