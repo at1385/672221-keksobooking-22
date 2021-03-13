@@ -15,6 +15,9 @@ adFormElements.forEach((element) => {
   deactivateElement(element);
 });
 
+const adFormAddress = adForm.querySelector('#address');
+adFormAddress.setAttribute('readonly', true);
+
 const setAdMinPrice = () => {
   switch (adFormType.value) {
     case APARTMENT_TYPES[0]:
@@ -54,3 +57,5 @@ const onAdFormTimeOutChange = () => {
 adFormTimeIn.addEventListener('change', onAdFormTimeInChange);
 
 adFormTimeOut.addEventListener('change',onAdFormTimeOutChange);
+
+export {adForm, adFormHeader, adFormElements, adFormAddress};

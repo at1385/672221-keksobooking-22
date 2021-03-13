@@ -53,3 +53,8 @@ const mapPin = window.L.marker(
 
 mapPin.addTo(map);
 
+mapPin.on('drag', (evt) => {
+  const anchorPoint = evt.target.getLatLng();
+  adFormAddress.value = `${anchorPoint.lat.toFixed(PRECISION)}, ${anchorPoint.lng.toFixed(PRECISION)}`;
+});
+
