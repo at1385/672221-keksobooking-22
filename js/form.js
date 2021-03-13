@@ -1,8 +1,22 @@
-import {APARTMENT_TYPES} from './create-ads.js'
+import {APARTMENT_TYPES} from './create-ads.js';
+import {deactivateBlock, deactivateElement} from './deactivator.js';
 
 const adForm = document.querySelector('.ad-form');
+const adFormHeader = adForm.querySelector('.ad-form-header');
+const adFormElements = adForm.querySelectorAll('.ad-form__element');
 const adFormType = adForm.querySelector('#type');
 const adFormPrice = adForm.querySelector('#price');
+
+deactivateBlock(adForm, 'ad-form--disabled');
+
+deactivateElement(adFormHeader);
+
+adFormElements.forEach((element) => {
+  deactivateElement(element);
+});
+
+const adFormAddress = adForm.querySelector('#address');
+adFormAddress.setAttribute('readonly', true);
 
 const setAdMinPrice = () => {
   switch (adFormType.value) {
@@ -43,3 +57,5 @@ const onAdFormTimeOutChange = () => {
 adFormTimeIn.addEventListener('change', onAdFormTimeInChange);
 
 adFormTimeOut.addEventListener('change',onAdFormTimeOutChange);
+
+export {adForm, adFormHeader, adFormElements, adFormAddress};
