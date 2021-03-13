@@ -1,4 +1,6 @@
 import {activateBlock, activateElement} from './activator.js';
+import {createAds} from './create-ads.js';
+import {renderAdCard} from './render-ad-card.js';
 import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
 import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';
 
@@ -58,3 +60,53 @@ mapPin.on('drag', (evt) => {
   adFormAddress.value = `${anchorPoint.lat.toFixed(PRECISION)}, ${anchorPoint.lng.toFixed(PRECISION)}`;
 });
 
+const ads = createAds();
+const adPins = [];
+
+ads.forEach(({offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}, author: {avatar}, location: {x, y}}, index) => {
+  adPins[index] = {
+    title,
+    address,
+    price,
+    type,
+    rooms,
+    guests,
+    checkin,
+    checkout,
+    features,
+    description,
+    photos,
+    avatar,
+    lat: x,
+    lng: y,
+  }
+});
+
+adPins.forEach((element) => {
+  const {lat, lng} = element;
+
+  const adPinIcon = window.L.icon ({
+    iconUrl: 'img/pin.svg',
+    iconSize: [40, 40],
+    iconAnchore: [20, 40],
+  });
+
+  const adPin = window.L.marker(
+    {
+      lat,
+      lng,
+    },
+    {
+      icon: adPinIcon,
+    },
+  );
+
+  adPin
+    .addTo(map)
+    .bindPopup(
+      renderAdCard(element),
+      {
+        keepInView: true,
+      },
+    );
+})
