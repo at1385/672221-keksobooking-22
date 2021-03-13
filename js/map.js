@@ -34,3 +34,22 @@ window.L.tileLayer(
   },
 ).addTo(map);
 
+const mapPinIcon = window.L.icon ({
+  iconUrl: 'img/main-pin.svg',
+  iconSize: [52, 52],
+  iconAnchore: [26, 52],
+});
+
+const mapPin = window.L.marker(
+  {
+    lat: TOKYO_LATITUDE,
+    lng: TOKYO_LONGITUDE,
+  },
+  {
+    draggable: true,
+    icon: mapPinIcon,
+  },
+);
+
+mapPin.addTo(map);
+
