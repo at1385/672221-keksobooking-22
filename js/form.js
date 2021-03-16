@@ -10,6 +10,8 @@ const MIN_PRICE_BUNGALOW = 0;
 const MAX_PRICE_VALUE = 1e6;
 
 const adForm = document.querySelector('.ad-form');
+adForm.setAttribute('action', 'https://22.javascript.pages.academy/keksobooking');
+
 const adFormHeader = adForm.querySelector('.ad-form-header');
 const adFormElements = adForm.querySelectorAll('.ad-form__element');
 const adFormType = adForm.querySelector('#type');
