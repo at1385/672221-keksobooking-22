@@ -28,6 +28,35 @@ adFormElements.forEach((element) => {
 const adFormAddress = adForm.querySelector('#address');
 adFormAddress.setAttribute('readonly', true);
 
+const adFormTitle = adForm.querySelector('#title');
+adFormTitle.setAttribute('required', true);
+adFormTitle.setAttribute('minlength', MIN_TITLE_LENGTH);
+adFormTitle.setAttribute('maxlength', MAX_TITLE_LENGTH);
+
+const showTitleMessage = (expression, customMessage) => {
+  if (expression > 4) {
+    adFormTitle.setCustomValidity(`${customMessage} символов`);
+  } else if (expression === 1) {
+    adFormTitle.setCustomValidity(`${customMessage} символ`)
+  } else {
+    adFormTitle.setCustomValidity(`${customMessage} символа`)
+  }
+};
+
+adFormTitle.addEventListener('input', () => {
+  const lengthValue = adFormTitle.value.length;
+
+  if (lengthValue < MIN_TITLE_LENGTH) {
+    showTitleMessage(MIN_TITLE_LENGTH - lengthValue, `Необходимо ввести ещё минимум ${MIN_TITLE_LENGTH - lengthValue}`);
+  } else if (lengthValue > MAX_TITLE_LENGTH) {
+    showTitleMessage(lengthValue - MAX_TITLE_LENGTH, `Сократите заголовок на ${lengthValue - MAX_TITLE_LENGTH}`);
+  } else {
+    adFormTitle.setCustomValidity('');
+  }
+
+  adFormTitle.reportValidity();
+});
+
 const setAdMinPrice = () => {
   switch (adFormType.value) {
     case APARTMENT_TYPES[0]:
