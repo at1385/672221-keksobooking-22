@@ -1,6 +1,14 @@
 import {APARTMENT_TYPES} from './create-ads.js';
 import {deactivateBlock, deactivateElement} from './deactivator.js';
 
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
+const MIN_PRICE_PALACE = 10000;
+const MIN_PRICE_FLAT = 1000;
+const MIN_PRICE_HOUSE = 5000;
+const MIN_PRICE_BUNGALOW = 0;
+const MAX_PRICE_VALUE = 1e6;
+
 const adForm = document.querySelector('.ad-form');
 const adFormHeader = adForm.querySelector('.ad-form-header');
 const adFormElements = adForm.querySelectorAll('.ad-form__element');
