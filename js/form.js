@@ -14,13 +14,9 @@ adForm.setAttribute('action', 'https://22.javascript.pages.academy/keksobooking'
 
 const adFormHeader = adForm.querySelector('.ad-form-header');
 const adFormElements = adForm.querySelectorAll('.ad-form__element');
-const adFormType = adForm.querySelector('#type');
-const adFormPrice = adForm.querySelector('#price');
 
 deactivateBlock(adForm, 'ad-form--disabled');
-
 deactivateElement(adFormHeader);
-
 adFormElements.forEach((element) => {
   deactivateElement(element);
 });
@@ -57,29 +53,50 @@ adFormTitle.addEventListener('input', () => {
   adFormTitle.reportValidity();
 });
 
+const adFormType = adForm.querySelector('#type');
+const adFormPrice = adForm.querySelector('#price');
+adFormPrice.setAttribute('required', true);
+adFormPrice.setAttribute('max', MAX_PRICE_VALUE);
+
 const setAdMinPrice = () => {
   switch (adFormType.value) {
     case APARTMENT_TYPES[0]:
-      adFormPrice.setAttribute('min', '10000');
-      adFormPrice.setAttribute('placeholder', '10000');
+      adFormPrice.setAttribute('min', MIN_PRICE_PALACE);
+      adFormPrice.setAttribute('placeholder', MIN_PRICE_PALACE);
       break;
     case APARTMENT_TYPES[1]:
-      adFormPrice.setAttribute('min', '1000');
-      adFormPrice.setAttribute('placeholder', '1000');
+      adFormPrice.setAttribute('min', MIN_PRICE_FLAT);
+      adFormPrice.setAttribute('placeholder', MIN_PRICE_FLAT);
       break;
     case APARTMENT_TYPES[2]:
-      adFormPrice.setAttribute('min', '5000');
-      adFormPrice.setAttribute('placeholder', '5000');
+      adFormPrice.setAttribute('min', MIN_PRICE_HOUSE);
+      adFormPrice.setAttribute('placeholder', MIN_PRICE_HOUSE);
       break;
     case APARTMENT_TYPES[3]:
-      adFormPrice.setAttribute('min', '0');
-      adFormPrice.setAttribute('placeholder', '0');
+      adFormPrice.setAttribute('min', MIN_PRICE_BUNGALOW);
+      adFormPrice.setAttribute('placeholder', MIN_PRICE_BUNGALOW);
       break;
   }
 };
 
+setAdMinPrice();
+
 adFormType.addEventListener('change', () => {
   setAdMinPrice();
+});
+
+adFormPrice.addEventListener('input', () => {
+  const priceValue = +adFormPrice.value;
+
+  if (priceValue < +adFormPrice.min) {
+    adFormPrice.setCustomValidity(`Минимальная цена за ночь должна быть не ниже ${adFormPrice.min} рублей`);
+  } else if (priceValue > +adFormPrice.max) {
+    adFormPrice.setCustomValidity(`Максимальная цена за ночь должна быть не выше ${adFormPrice.max} рублей`);
+  } else {
+    adFormPrice.setCustomValidity('');
+  }
+
+  adFormPrice.reportValidity();
 });
 
 const adFormTimeIn = adForm.querySelector('#timein');
