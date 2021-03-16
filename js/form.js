@@ -111,7 +111,37 @@ const onAdFormTimeOutChange = () => {
 };
 
 adFormTimeIn.addEventListener('change', onAdFormTimeInChange);
-
 adFormTimeOut.addEventListener('change',onAdFormTimeOutChange);
+
+const adFormRoomQuantity = adForm.querySelector('#room_number');
+const adFormGuestQuantity = adForm.querySelector('#capacity');
+
+const showRoomOrGuestMessage = (messageLocation, customMessage) => {
+  if (+adFormRoomQuantity.value < +adFormGuestQuantity.value) {
+    messageLocation.setCustomValidity(customMessage);
+  } else if (+adFormRoomQuantity.value === 100 && +adFormGuestQuantity.value !== 0) {
+    messageLocation.setCustomValidity('100 комнат не для гостей!');
+  } else if (+adFormRoomQuantity.value !== 100 && +adFormGuestQuantity.value === 0) {
+    messageLocation.setCustomValidity('Только для 100 комнат!');
+  } else {
+    messageLocation.setCustomValidity('');
+  }
+};
+
+adFormRoomQuantity.addEventListener('change', () => {
+  showRoomOrGuestMessage(adFormGuestQuantity, 'Количество гостей не должно превышать количество комнат!');
+
+  adFormGuestQuantity.reportValidity();
+});
+
+adFormGuestQuantity.addEventListener('change', () => {
+  showRoomOrGuestMessage(adFormRoomQuantity, 'Количество комнат не должно быть меньше количества гостей!');
+
+  adFormRoomQuantity.reportValidity();
+});
+
+adForm.addEventListener('click', () => {
+  showRoomOrGuestMessage(adFormGuestQuantity, 'Количество гостей не должно превышать количество комнат!');
+});
 
 export {adForm, adFormHeader, adFormElements, adFormAddress};
