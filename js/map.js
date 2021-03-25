@@ -1,5 +1,4 @@
 import {activateBlock, activateElement} from './activator.js';
-import {createAds} from './create-ads.js';
 import {renderAdCard} from './render-ad-card.js';
 import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
 import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';

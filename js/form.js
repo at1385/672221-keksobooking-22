@@ -1,5 +1,5 @@
-import {APARTMENT_TYPES} from './create-ads.js';
 import {deactivateBlock, deactivateElement} from './deactivator.js';
+import {APARTMENT_TYPES} from './apartment-types.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
