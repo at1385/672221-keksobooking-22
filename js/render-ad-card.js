@@ -1,4 +1,4 @@
-import {hideNode} from './util.js';
+import {getCorrectEndingWord, hideNode} from './util.js';
 
 const renderAdCard = (ad) => {
   const adCardTemplate = document.querySelector('#card').content.querySelector('.popup');
@@ -17,7 +17,7 @@ const renderAdCard = (ad) => {
   ad.type ? adType.textContent = ad.type : hideNode(adType);
 
   const adCapacity = adCard.querySelector('.popup__text--capacity');
-  ad.rooms >= 0 && ad.guests > 0 ? adCapacity.textContent = `${ad.rooms} комнаты для ${ad.guests} гостей` : hideNode(adCapacity);
+  ad.rooms >= 0 && ad.guests > 0 ? adCapacity.textContent = `${ad.rooms} ${getCorrectEndingWord(ad.rooms, 'комната', 'комнаты', 'комнат')} для ${ad.guests} ${getCorrectEndingWord(ad.guests, 'гостя', 'гостей', 'гостей')}` : hideNode(adCapacity);
 
   const adCheckTime = adCard.querySelector('.popup__text--time');
   ad.checkin && ad.checkout ? adCheckTime.textContent = `Заезд после ${ad.checkin}, выезд до ${ad.checkout}` : hideNode(adCheckTime);
