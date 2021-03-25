@@ -1,20 +1,18 @@
 import {activateBlock, activateElement} from './activator.js';
+import {getData} from './server.js';
+import {translateApartmentType} from './apartment-types.js';
 import {renderAdCard} from './render-ad-card.js';
 import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
 import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';
+import {showAlert} from './util.js';
 
 const TOKYO_LATITUDE = 35.67100;
 const TOKYO_LONGITUDE = 139.78350;
 const PRECISION = 5;
+const INCOMING_ERROR_MESSAGE = 'Объявления не были загружены. Попробуйте обновить страницу.';
 
 const map = window.L.map('map-canvas')
   .on('load', () => {
-    mapFilters.forEach((element) => {
-      activateElement(element);
-    });
-    activateElement(mapFeaturesBlock);
-    activateBlock(mapFilterForm, 'map__filters--disabled');
-
     activateElement(adFormHeader);
     adFormElements.forEach((element) => {
       activateElement(element);
@@ -26,7 +24,7 @@ const map = window.L.map('map-canvas')
   .setView({
     lat: TOKYO_LATITUDE,
     lng: TOKYO_LONGITUDE,
-  }, 12);
+  }, 10);
 
 window.L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -59,53 +57,60 @@ mapPin.on('drag', (evt) => {
   adFormAddress.value = `${anchorPoint.lat.toFixed(PRECISION)}, ${anchorPoint.lng.toFixed(PRECISION)}`;
 });
 
-const ads = createAds();
-const adPins = [];
+getData()
+  .then((ads) => {
+    const adPins = [];
 
-ads.forEach(({offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}, author: {avatar}, location: {x, y}}, index) => {
-  adPins[index] = {
-    title,
-    address,
-    price,
-    type,
-    rooms,
-    guests,
-    checkin,
-    checkout,
-    features,
-    description,
-    photos,
-    avatar,
-    lat: x,
-    lng: y,
-  }
-});
+    ads.forEach(({offer: {title, address, price, type, rooms, guests, checkin, checkout, features, description, photos}, author: {avatar}, location: {lat, lng}}, index) => {
+      adPins[index] = {
+        title,
+        address,
+        price,
+        type: translateApartmentType(type),
+        rooms,
+        guests,
+        checkin,
+        checkout,
+        features,
+        description,
+        photos,
+        avatar,
+        lat,
+        lng,
+      }
+    });
 
-adPins.forEach((element) => {
-  const {lat, lng} = element;
+    adPins.forEach((element) => {
+      const {lat, lng} = element;
 
-  const adPinIcon = window.L.icon ({
-    iconUrl: 'img/pin.svg',
-    iconSize: [40, 40],
-    iconAnchore: [20, 40],
-  });
+      const adPinIcon = window.L.icon ({
+        iconUrl: 'img/pin.svg',
+        iconSize: [40, 40],
+        iconAnchore: [20, 40],
+      });
 
-  const adPin = window.L.marker(
-    {
-      lat,
-      lng,
-    },
-    {
-      icon: adPinIcon,
-    },
-  );
+      const adPin = window.L.marker(
+        {
+          lat,
+          lng,
+        },
+        {
+          icon: adPinIcon,
+        },
+      );
 
-  adPin
-    .addTo(map)
-    .bindPopup(
-      renderAdCard(element),
-      {
-        keepInView: true,
-      },
-    );
-})
+      adPin
+        .addTo(map)
+        .bindPopup(
+          renderAdCard(element),
+        );
+    })
+  })
+  .then(() => {
+    mapFilters.forEach((element) => {
+      activateElement(element);
+    });
+    activateElement(mapFeaturesBlock);
+    activateBlock(mapFilterForm, 'map__filters--disabled');
+  })
+  .catch(() => showAlert(INCOMING_ERROR_MESSAGE));
