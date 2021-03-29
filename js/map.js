@@ -1,10 +1,10 @@
 import {activateBlock, activateElement} from './activator.js';
-import {getData} from './server.js';
+import {ADS_DATA_URL, getData} from './server.js';
 import {translateApartmentType} from './apartment-types.js';
 import {renderAdCard} from './render-ad-card.js';
 import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
 import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';
-import {showAlert} from './util.js';
+import {showIncomingError} from './util.js';
 
 const TOKYO_LATITUDE = 35.67100;
 const TOKYO_LONGITUDE = 139.78350;
@@ -57,7 +57,7 @@ mapPin.on('drag', (evt) => {
   adFormAddress.value = `${anchorPoint.lat.toFixed(PRECISION)}, ${anchorPoint.lng.toFixed(PRECISION)}`;
 });
 
-getData()
+getData(ADS_DATA_URL)
   .then((ads) => {
     const adPins = [];
 
@@ -113,4 +113,5 @@ getData()
     activateElement(mapFeaturesBlock);
     activateBlock(mapFilterForm, 'map__filters--disabled');
   })
-  .catch(() => showAlert(INCOMING_ERROR_MESSAGE));
+  .catch(() => showIncomingError(INCOMING_ERROR_MESSAGE));
+
