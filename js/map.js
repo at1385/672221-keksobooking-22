@@ -8,7 +8,7 @@ import {showIncomingError} from './util.js';
 
 const TOKYO_LATITUDE = 35.67100;
 const TOKYO_LONGITUDE = 139.78350;
-const PRECISION = 5;
+const COORD_PRECISION = 5;
 const INCOMING_ERROR_MESSAGE = 'Объявления не были загружены. Попробуйте обновить страницу.';
 
 const map = window.L.map('map-canvas')
@@ -19,7 +19,7 @@ const map = window.L.map('map-canvas')
     });
     activateBlock(adForm, 'ad-form--disabled');
 
-    adFormAddress.value = `${TOKYO_LATITUDE.toFixed(PRECISION)}, ${TOKYO_LONGITUDE.toFixed(PRECISION)}`;
+    adFormAddress.value = `${TOKYO_LATITUDE.toFixed(COORD_PRECISION)}, ${TOKYO_LONGITUDE.toFixed(COORD_PRECISION)}`;
   })
   .setView({
     lat: TOKYO_LATITUDE,
@@ -54,7 +54,7 @@ mapPin.addTo(map);
 
 mapPin.on('drag', (evt) => {
   const anchorPoint = evt.target.getLatLng();
-  adFormAddress.value = `${anchorPoint.lat.toFixed(PRECISION)}, ${anchorPoint.lng.toFixed(PRECISION)}`;
+  adFormAddress.value = `${anchorPoint.lat.toFixed(COORD_PRECISION)}, ${anchorPoint.lng.toFixed(COORD_PRECISION)}`;
 });
 
 getData(ADS_DATA_URL)
@@ -115,3 +115,4 @@ getData(ADS_DATA_URL)
   })
   .catch(() => showIncomingError(INCOMING_ERROR_MESSAGE));
 
+export {TOKYO_LATITUDE, TOKYO_LONGITUDE, COORD_PRECISION, mapPin};
