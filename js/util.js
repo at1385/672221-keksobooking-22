@@ -1,40 +1,63 @@
-const getRandomArrayElement = (array) => {
-  return array[window._.random(0, array.length - 1)];
-};
-
-const checkDoubleArrayElement = (array, element) => {
-  for (let i = 0; i < array.length - 1; i++) {
-    if (array[i] === element) {
-      return true;
-    }
+const getCorrectEndingWord = (value, firstWord, secondWord, thirdWord) => {
+  if (value === 1) {
+    return firstWord;
+  } else if (value <= 4) {
+    return secondWord;
+  } else {
+    return thirdWord;
   }
-};
-
-const getRandomArray = (length, values, isUnique = false) => {
-  const array = [];
-
-  new Array(window._.random(length)).fill(null).map((element) => {
-    element = getRandomArrayElement(values);
-    array.push(element);
-
-    if (isUnique && array.length > 1) {
-      while (checkDoubleArrayElement(array, element)) {
-        array.pop();
-        element = getRandomArrayElement(values);
-        array.push(element);
-      }
-    }
-  });
-
-  return array;
-};
-
-const getRandomNumber = (min, max, isFloat = false, precision) => {
-  return +window._.random(min, max, isFloat).toFixed(precision);
 };
 
 const hideNode = (node) => {
   node.style.display = 'none';
 }
 
-export {getRandomArrayElement, getRandomArray, getRandomNumber, hideNode};
+const isEscKeydown = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
+const showIncomingError = (message) => {
+  const alertBlock = document.createElement('div');
+
+  alertBlock.style.position = 'absolute';
+  alertBlock.style.top = 0;
+  alertBlock.style.right = 0;
+  alertBlock.style.left = 0;
+  alertBlock.style.zIndex = 100;
+  alertBlock.style.padding = '10px 3px';
+  alertBlock.style.fontSize = '30px';
+  alertBlock.style.color = 'white';
+  alertBlock.style.textAlign = 'center';
+  alertBlock.style.background = 'red';
+
+  alertBlock.textContent = message;
+
+  document.body.appendChild(alertBlock);
+};
+
+const showOutcomingMessage = (templateId, templateContent) => {
+  const messageTemplate = document.querySelector(templateId).content.querySelector(templateContent);
+  const message = messageTemplate.cloneNode(true);
+
+  message.style.zIndex = 1000;
+
+  document.body.appendChild(message);
+
+  const hideOutcomingMessage = () => {
+    document.body.removeChild(message);
+    document.removeEventListener('keydown', onOutcomingMessageEscKeydown);
+  };
+
+  const onOutcomingMessageEscKeydown = (evt) => {
+    if (isEscKeydown(evt)) {
+      evt.preventDefault();
+      hideOutcomingMessage();
+    }
+  };
+
+  message.addEventListener('click', () => {
+    hideOutcomingMessage(templateContent);
+  });
+
+  document.addEventListener('keydown', onOutcomingMessageEscKeydown);
+};
+
+export {getCorrectEndingWord, hideNode, showIncomingError, showOutcomingMessage};
