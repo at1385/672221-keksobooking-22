@@ -33,4 +33,31 @@ const showIncomingError = (message) => {
   document.body.appendChild(alertBlock);
 };
 
-export {getCorrectEndingWord, hideNode, showAlert};
+const showOutcomingMessage = (templateId, templateContent) => {
+  const messageTemplate = document.querySelector(templateId).content.querySelector(templateContent);
+  const message = messageTemplate.cloneNode(true);
+
+  message.style.zIndex = 1000;
+
+  document.body.appendChild(message);
+
+  const hideOutcomingMessage = () => {
+    document.body.removeChild(message);
+    document.removeEventListener('keydown', onOutcomingMessageEscKeydown);
+  };
+
+  const onOutcomingMessageEscKeydown = (evt) => {
+    if (isEscKeydown(evt)) {
+      evt.preventDefault();
+      hideOutcomingMessage();
+    }
+  };
+
+  message.addEventListener('click', () => {
+    hideOutcomingMessage(templateContent);
+  });
+
+  document.addEventListener('keydown', onOutcomingMessageEscKeydown);
+};
+
+export {getCorrectEndingWord, hideNode, showIncomingError, showOutcomingMessage};
