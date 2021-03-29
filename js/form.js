@@ -1,6 +1,8 @@
 import {deactivateBlock, deactivateElement} from './deactivator.js';
+import {AD_FORM_URL, sendData} from './server.js';
 import {APARTMENT_TYPES} from './apartment-types.js';
-import {getCorrectEndingWord} from './util.js';
+import {resetPage} from './reset-page.js';
+import {getCorrectEndingWord, showOutcomingMessage} from './util.js';
 
 const MIN_TITLE_LENGTH = 30;
 const MAX_TITLE_LENGTH = 100;
@@ -133,6 +135,22 @@ adFormGuestQuantity.addEventListener('change', () => {
 
 adForm.addEventListener('click', () => {
   showRoomOrGuestMessage(adFormGuestQuantity, 'Количество гостей не должно превышать количество комнат!');
+});
+
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+
+  sendData(
+    new FormData(evt.target),
+    AD_FORM_URL,
+    () => {
+      resetPage();
+      showOutcomingMessage('#success', '.success');
+    },
+    () => {
+      showOutcomingMessage('#error', '.error');
+    },
+  );
 });
 
 export {adForm, adFormHeader, adFormElements, adFormAddress};
