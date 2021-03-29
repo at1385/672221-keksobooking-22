@@ -22,9 +22,6 @@ adFormElements.forEach((element) => {
   deactivateElement(element);
 });
 
-const adFormAddress = adForm.querySelector('#address');
-adFormAddress.setAttribute('readonly', true);
-
 const adFormTitle = adForm.querySelector('#title');
 adFormTitle.setAttribute('required', true);
 adFormTitle.setAttribute('minlength', MIN_TITLE_LENGTH);
@@ -43,6 +40,9 @@ adFormTitle.addEventListener('input', () => {
 
   adFormTitle.reportValidity();
 });
+
+const adFormAddress = adForm.querySelector('#address');
+adFormAddress.setAttribute('readonly', true);
 
 const adFormType = adForm.querySelector('#type');
 const adFormPrice = adForm.querySelector('#price');
