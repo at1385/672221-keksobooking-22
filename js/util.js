@@ -12,8 +12,9 @@ const hideNode = (node) => {
   node.style.display = 'none';
 }
 
-const showAlert = (message) => {
+const showIncomingError = (message) => {
   const alertBlock = document.createElement('div');
+
   alertBlock.style.position = 'absolute';
   alertBlock.style.top = 0;
   alertBlock.style.right = 0;
