@@ -137,6 +137,13 @@ adForm.addEventListener('click', () => {
   showRoomOrGuestMessage(adFormGuestQuantity, 'Количество гостей не должно превышать количество комнат!');
 });
 
+const adFormReset = adForm.querySelector('.ad-form__reset');
+
+adFormReset.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  resetPage();
+});
+
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
 
