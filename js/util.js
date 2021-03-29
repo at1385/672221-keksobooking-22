@@ -12,6 +12,8 @@ const hideNode = (node) => {
   node.style.display = 'none';
 }
 
+const isEscKeydown = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
+
 const showIncomingError = (message) => {
   const alertBlock = document.createElement('div');
 
