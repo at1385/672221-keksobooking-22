@@ -9,6 +9,9 @@ import {showIncomingError} from './util.js';
 const TOKYO_LATITUDE = 35.67100;
 const TOKYO_LONGITUDE = 139.78350;
 const COORD_PRECISION = 5;
+
+const ADS_MAX_QUANTITY = 10;
+
 const INCOMING_ERROR_MESSAGE = 'Объявления не были загружены. Попробуйте обновить страницу.';
 
 const map = window.L.map('map-canvas')
@@ -80,7 +83,7 @@ getData(ADS_DATA_URL)
       }
     });
 
-    adPins.forEach((element) => {
+    adPins.slice(0, ADS_MAX_QUANTITY).forEach((element) => {
       const {lat, lng} = element;
 
       const adPinIcon = window.L.icon ({
