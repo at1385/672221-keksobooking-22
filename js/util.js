@@ -12,6 +12,12 @@ const hideNode = (node) => {
   node.style.display = 'none';
 }
 
+const deleteAttribute = (element, attribute) => {
+  if (element.hasAttribute(attribute)) {
+    element.removeAttribute(attribute);
+  }
+}
+
 const isEscKeydown = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
 const showIncomingError = (message) => {
@@ -60,4 +66,4 @@ const showOutcomingMessage = (templateId, templateContent) => {
   document.addEventListener('keydown', onOutcomingMessageEscKeydown);
 };
 
-export {getCorrectEndingWord, hideNode, showIncomingError, showOutcomingMessage};
+export {getCorrectEndingWord, hideNode, deleteAttribute, showIncomingError, showOutcomingMessage};
