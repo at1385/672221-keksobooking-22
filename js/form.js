@@ -31,6 +31,7 @@ adFormElements.forEach((element) => {
   deactivateElement(element);
 });
 
+// title
 const adFormTitle = adForm.querySelector('#title');
 adFormTitle.setAttribute('required', true);
 adFormTitle.setAttribute('minlength', AdTitleLength.MIN);
@@ -51,9 +52,11 @@ adFormTitle.addEventListener('input', () => {
   adFormTitle.reportValidity();
 });
 
+// address
 const adFormAddress = adForm.querySelector('#address');
 adFormAddress.setAttribute('readonly', true);
 
+// type/price
 const adFormType = adForm.querySelector('#type');
 const adFormPrice = adForm.querySelector('#price');
 adFormPrice.setAttribute('required', true);
@@ -101,6 +104,7 @@ adFormPrice.addEventListener('input', () => {
   adFormPrice.reportValidity();
 });
 
+// in/out
 const adFormTimeIn = adForm.querySelector('#timein');
 const adFormTimeOut = adForm.querySelector('#timeout');
 
@@ -115,6 +119,7 @@ const onAdFormTimeOutChange = () => {
 adFormTimeIn.addEventListener('change', onAdFormTimeInChange);
 adFormTimeOut.addEventListener('change',onAdFormTimeOutChange);
 
+// rooms/guests
 const adFormRoomQuantity = adForm.querySelector('#room_number');
 const adFormGuestQuantity = adForm.querySelector('#capacity');
 
@@ -147,6 +152,7 @@ adForm.addEventListener('click', () => {
   showRoomOrGuestMessage(adFormGuestQuantity, 'Количество гостей не должно превышать количество комнат!');
 });
 
+// reset
 const adFormReset = adForm.querySelector('.ad-form__reset');
 
 adFormReset.addEventListener('click', (evt) => {
@@ -157,6 +163,7 @@ adFormReset.addEventListener('click', (evt) => {
   deleteAttribute(adFormGuestQuantity, 'style');
 });
 
+// submit
 const adFormSubmit = adForm.querySelector('.ad-form__submit');
 
 const setInvalidBorder = (formElement) => {
