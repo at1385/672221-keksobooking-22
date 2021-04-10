@@ -2,7 +2,7 @@ import {deactivateBlock, deactivateElement} from './deactivator.js';
 import {ServerUrl, sendData} from './server.js';
 import {ApartmentType} from './apartment-types.js';
 import {resetPage} from './reset-page.js';
-import {getCorrectEndingWord, showOutcomingMessage} from './util.js';
+import {deleteAttribute, getCorrectEndingWord, showOutcomingMessage} from './util.js';
 
 const AdTitleLength = {
   MIN: 30,
@@ -44,6 +44,7 @@ adFormTitle.addEventListener('input', () => {
   } else if (lengthValue > AdTitleLength.MAX) {
     adFormTitle.setCustomValidity(`Сократите заголовок на ${lengthValue - AdTitleLength.MAX} ${getCorrectEndingWord(lengthValue - AdTitleLength.MAX, 'символ', 'символа', 'символов')}`);
   } else {
+    deleteAttribute(adFormTitle, 'style');
     adFormTitle.setCustomValidity('');
   }
 
@@ -93,6 +94,7 @@ adFormPrice.addEventListener('input', () => {
   } else if (priceValue > +adFormPrice.max) {
     adFormPrice.setCustomValidity(`Максимальная цена за ночь должна быть не выше ${adFormPrice.max} рублей`);
   } else {
+    deleteAttribute(adFormPrice, 'style');
     adFormPrice.setCustomValidity('');
   }
 
@@ -124,6 +126,7 @@ const showRoomOrGuestMessage = (messageLocation, customMessage) => {
   } else if (+adFormRoomQuantity.value !== 100 && +adFormGuestQuantity.value === 0) {
     messageLocation.setCustomValidity('Только для 100 комнат!');
   } else {
+    deleteAttribute(adFormGuestQuantity, 'style');
     messageLocation.setCustomValidity('');
   }
 };
@@ -149,6 +152,23 @@ const adFormReset = adForm.querySelector('.ad-form__reset');
 adFormReset.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetPage();
+  deleteAttribute(adFormTitle, 'style');
+  deleteAttribute(adFormPrice, 'style');
+  deleteAttribute(adFormGuestQuantity, 'style');
+});
+
+const adFormSubmit = adForm.querySelector('.ad-form__submit');
+
+const setInvalidBorder = (formElement) => {
+  formElement.addEventListener('invalid', () => {
+    formElement.style = 'border: 2px solid red';
+  });
+};
+
+adFormSubmit.addEventListener('click', () => {
+  setInvalidBorder(adFormTitle);
+  setInvalidBorder(adFormPrice);
+  setInvalidBorder(adFormGuestQuantity);
 });
 
 adForm.addEventListener('submit', (evt) => {
