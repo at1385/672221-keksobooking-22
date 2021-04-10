@@ -1,6 +1,6 @@
 import {activateBlock, activateElement} from './activator.js';
-import {translateApartmentType} from './apartment-types.js';
 import {ServerUrl, getData} from './server.js';
+import {apartmentTypeToRus} from './apartment-types.js';
 import {renderAdCard} from './render-ad-card.js';
 import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
 import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';
@@ -70,7 +70,7 @@ getData(ServerUrl.ADS_DATA)
         title,
         address,
         price,
-        type: translateApartmentType(type),
+        type: apartmentTypeToRus[type],
         rooms,
         guests,
         checkin,

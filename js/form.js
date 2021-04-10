@@ -1,6 +1,6 @@
 import {deactivateBlock, deactivateElement} from './deactivator.js';
-import {APARTMENT_TYPES} from './apartment-types.js';
 import {ServerUrl, sendData} from './server.js';
+import {ApartmentType} from './apartment-types.js';
 import {resetPage} from './reset-page.js';
 import {getCorrectEndingWord, showOutcomingMessage} from './util.js';
 
@@ -53,21 +53,21 @@ adFormPrice.setAttribute('max', MAX_PRICE_VALUE);
 
 const setAdMinPrice = () => {
   switch (adFormType.value) {
-    case APARTMENT_TYPES[0]:
       adFormPrice.setAttribute('min', MIN_PRICE_PALACE);
       adFormPrice.setAttribute('placeholder', MIN_PRICE_PALACE);
+    case ApartmentType.PALACE:
       break;
-    case APARTMENT_TYPES[1]:
       adFormPrice.setAttribute('min', MIN_PRICE_FLAT);
       adFormPrice.setAttribute('placeholder', MIN_PRICE_FLAT);
+    case ApartmentType.FLAT:
       break;
-    case APARTMENT_TYPES[2]:
       adFormPrice.setAttribute('min', MIN_PRICE_HOUSE);
       adFormPrice.setAttribute('placeholder', MIN_PRICE_HOUSE);
+    case ApartmentType.HOUSE:
       break;
-    case APARTMENT_TYPES[3]:
       adFormPrice.setAttribute('min', MIN_PRICE_BUNGALOW);
       adFormPrice.setAttribute('placeholder', MIN_PRICE_BUNGALOW);
+    case ApartmentType.BUNGALOW:
       break;
   }
 };

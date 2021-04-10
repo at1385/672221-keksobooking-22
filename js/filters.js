@@ -1,4 +1,5 @@
 import {deactivateBlock, deactivateElement} from './deactivator.js';
+import {apartmentTypeToEng} from './apartment-types.js';
 
 const mapFilterForm = document.querySelector('.map__filters');
 const mapFilters = mapFilterForm.querySelectorAll('.map__filter');
