@@ -5,9 +5,11 @@ import {activateBlock, activateElement} from './activator.js';
 import {ServerUrl, getData} from './server.js';
 import {apartmentTypeToRus} from './apartment-types.js';
 import {renderAdCard} from './render-ad-card.js';
-import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
-import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';
+import {mapFilterForm, mapFilters, featuresFilter, getFilteredAds} from './filters.js';
+import {adForm, adFormHeader, adFormElements, adFormAddress, adFormReset} from './form.js';
 import {showIncomingError} from './util.js';
+
+const DEBOUNCE_INTERVAL = 500;
 
 const TokyoCoordinate = {
   LATITUDE: 35.67100,
@@ -27,7 +29,7 @@ const map = L.map('map-canvas')
     });
     activateBlock(adForm, 'ad-form--disabled');
 
-    adFormAddress.value = `${TOKYO_LATITUDE.toFixed(COORD_PRECISION)}, ${TOKYO_LONGITUDE.toFixed(COORD_PRECISION)}`;
+    adFormAddress.value = `${TokyoCoordinate.LATITUDE.toFixed(TokyoCoordinate.PRECISION)}, ${TokyoCoordinate.LONGITUDE.toFixed(TokyoCoordinate.PRECISION)}`;
   })
   .setView({
     lat: TokyoCoordinate.LATITUDE,
@@ -65,7 +67,46 @@ mapPin.on('drag', (evt) => {
   adFormAddress.value = `${anchorPoint.lat.toFixed(TokyoCoordinate.PRECISION)}, ${anchorPoint.lng.toFixed(TokyoCoordinate.PRECISION)}`;
 });
 
-getData(ADS_DATA_URL)
+const renderAdPins = (adPins) => {
+  for (let i = 0; i < ADS_MAX_QUANTITY; i++) {
+    if (adPins[i]) {
+      const {lat, lng} = adPins[i];
+
+      const adPinIcon = L.icon ({
+        iconUrl: 'img/pin.svg',
+        iconSize: [40, 40],
+        iconAnchore: [20, 40],
+      });
+
+      const adPin = L.marker(
+        {
+          lat,
+          lng,
+        },
+        {
+          icon: adPinIcon,
+        },
+      );
+
+      adPin
+        .addTo(map)
+        .bindPopup(
+          renderAdCard(adPins[i]),
+        );
+
+      mapFilterForm.addEventListener('change', () => {
+        map.removeLayer(adPin);
+      });
+
+      adFormReset.addEventListener('click', () => {
+        map.removeLayer(adPin);
+      });
+    } else {
+      break;
+    }
+  }
+};
+
 getData(ServerUrl.ADS_DATA)
   .then((ads) => {
     const adPins = [];
@@ -89,37 +130,26 @@ getData(ServerUrl.ADS_DATA)
       }
     });
 
-    adPins.slice(0, ADS_MAX_QUANTITY).forEach((element) => {
-      const {lat, lng} = element;
+    renderAdPins(adPins);
 
-      const adPinIcon = window.L.icon ({
-        iconUrl: 'img/pin.svg',
-        iconSize: [40, 40],
-        iconAnchore: [20, 40],
-      });
+    const setFilterChange = () => {
+      const filteredAdPins = getFilteredAds(adPins);
 
-      const adPin = window.L.marker(
-        {
-          lat,
-          lng,
-        },
-        {
-          icon: adPinIcon,
-        },
-      );
+      renderAdPins(filteredAdPins);
+    };
 
-      adPin
-        .addTo(map)
-        .bindPopup(
-          renderAdCard(element),
-        );
-    })
+    mapFilterForm.addEventListener('change', _.debounce(setFilterChange, DEBOUNCE_INTERVAL));
+
+    adFormReset.addEventListener('click', () => {
+      renderAdPins(adPins);
+    });
+
   })
   .then(() => {
     mapFilters.forEach((element) => {
       activateElement(element);
     });
-    activateElement(mapFeaturesBlock);
+    activateElement(featuresFilter);
     activateBlock(mapFilterForm, 'map__filters--disabled');
   })
   .catch(() => showIncomingError(INCOMING_ERROR_MESSAGE));
