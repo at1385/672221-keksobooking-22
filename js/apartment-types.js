@@ -1,16 +1,22 @@
-const APARTMENT_TYPES = ['palace', 'flat', 'house', 'bungalow'];
+const ApartmentType = {
+  PALACE: 'palace',
+  FLAT: 'flat',
+  HOUSE: 'house',
+  BUNGALOW: 'bungalow',
+}
 
-const translateApartmentType = (apartmentType) => {
-  switch (apartmentType) {
-    case 'palace':
-      return 'Дворец';
-    case 'flat':
-      return 'Квартира';
-    case 'house':
-      return 'Дом';
-    case 'bungalow':
-      return 'Бунгало';
-  }
+const apartmentTypeToRus = {
+  'palace': 'Дворец',
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalow': 'Бунгало',
 };
 
-export {APARTMENT_TYPES, translateApartmentType};
+const apartmentTypeToEng = {
+  'Дворец': 'palace',
+  'Квартира': 'flat',
+  'Дом': 'house',
+  'Бунгало': 'bungalow',
+};
+
+export {ApartmentType, apartmentTypeToRus, apartmentTypeToEng};

@@ -1,17 +1,17 @@
-import {TOKYO_LATITUDE, TOKYO_LONGITUDE, COORD_PRECISION, mapPin} from './map.js'
+import {TokyoCoordinate, mapPin} from './map.js'
 import {mapFilterForm} from './filters.js';
 import {adForm, adFormAddress} from './form.js';
 
 const resetPage = () => {
   mapPin.setLatLng({
-    lat: TOKYO_LATITUDE,
-    lng: TOKYO_LONGITUDE,
+    lat: TokyoCoordinate.LATITUDE,
+    lng: TokyoCoordinate.LONGITUDE,
   });
 
   mapFilterForm.reset();
   adForm.reset();
 
-  adFormAddress.value = `${TOKYO_LATITUDE.toFixed(COORD_PRECISION)}, ${TOKYO_LONGITUDE.toFixed(COORD_PRECISION)}`;
+  adFormAddress.value = `${TokyoCoordinate.LATITUDE.toFixed(TokyoCoordinate.PRECISION)}, ${TokyoCoordinate.LONGITUDE.toFixed(TokyoCoordinate.PRECISION)}`;
 };
 
 export {resetPage};

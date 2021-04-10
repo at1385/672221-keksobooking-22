@@ -12,6 +12,12 @@ const hideNode = (node) => {
   node.style.display = 'none';
 }
 
+const deleteAttribute = (element, attribute) => {
+  if (element.hasAttribute(attribute)) {
+    element.removeAttribute(attribute);
+  }
+}
+
 const isEscKeydown = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 
 const showIncomingError = (message) => {
@@ -33,16 +39,18 @@ const showIncomingError = (message) => {
   document.body.appendChild(alertBlock);
 };
 
+const main = document.querySelector('main');
+
 const showOutcomingMessage = (templateId, templateContent) => {
   const messageTemplate = document.querySelector(templateId).content.querySelector(templateContent);
   const message = messageTemplate.cloneNode(true);
 
   message.style.zIndex = 1000;
 
-  document.body.appendChild(message);
+  main.appendChild(message);
 
   const hideOutcomingMessage = () => {
-    document.body.removeChild(message);
+    main.removeChild(message);
     document.removeEventListener('keydown', onOutcomingMessageEscKeydown);
   };
 
@@ -60,4 +68,4 @@ const showOutcomingMessage = (templateId, templateContent) => {
   document.addEventListener('keydown', onOutcomingMessageEscKeydown);
 };
 
-export {getCorrectEndingWord, hideNode, showIncomingError, showOutcomingMessage};
+export {getCorrectEndingWord, hideNode, deleteAttribute, showIncomingError, showOutcomingMessage};

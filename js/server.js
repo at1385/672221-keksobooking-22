@@ -1,5 +1,7 @@
-const ADS_DATA_URL = 'https://22.javascript.pages.academy/keksobooking/data';
-const AD_FORM_URL = 'https://22.javascript.pages.academy/keksobooking';
+const ServerUrl = {
+  ADS_DATA: 'https://22.javascript.pages.academy/keksobooking/data',
+  AD_FORM: 'https://22.javascript.pages.academy/keksobooking',
+}
 
 const getData = async (url) => {
   const response = await fetch(url);
@@ -30,4 +32,4 @@ const sendData = (body, url, onSuccess, onError) => {
     });
 }
 
-export {ADS_DATA_URL, AD_FORM_URL, getData, sendData};
+export {ServerUrl, getData, sendData};

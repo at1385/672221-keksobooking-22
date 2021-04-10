@@ -1,17 +1,27 @@
+/* global L:readonly */
+/* global _:readonly */
+
 import {activateBlock, activateElement} from './activator.js';
-import {ADS_DATA_URL, getData} from './server.js';
-import {translateApartmentType} from './apartment-types.js';
+import {ServerUrl, getData} from './server.js';
+import {apartmentTypeToRus} from './apartment-types.js';
 import {renderAdCard} from './render-ad-card.js';
-import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
-import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';
+import {mapFilterForm, mapFilters, featuresFilter, getFilteredAds} from './filters.js';
+import {adForm, adFormHeader, adFormElements, adFormAddress, adFormReset} from './form.js';
 import {showIncomingError} from './util.js';
 
-const TOKYO_LATITUDE = 35.67100;
-const TOKYO_LONGITUDE = 139.78350;
-const COORD_PRECISION = 5;
+const DEBOUNCE_INTERVAL = 500;
+
+const TokyoCoordinate = {
+  LATITUDE: 35.67100,
+  LONGITUDE: 139.78350,
+  PRECISION: 5,
+}
+
+const ADS_MAX_QUANTITY = 10;
+
 const INCOMING_ERROR_MESSAGE = 'Объявления не были загружены. Попробуйте обновить страницу.';
 
-const map = window.L.map('map-canvas')
+const map = L.map('map-canvas')
   .on('load', () => {
     activateElement(adFormHeader);
     adFormElements.forEach((element) => {
@@ -19,30 +29,30 @@ const map = window.L.map('map-canvas')
     });
     activateBlock(adForm, 'ad-form--disabled');
 
-    adFormAddress.value = `${TOKYO_LATITUDE.toFixed(COORD_PRECISION)}, ${TOKYO_LONGITUDE.toFixed(COORD_PRECISION)}`;
+    adFormAddress.value = `${TokyoCoordinate.LATITUDE.toFixed(TokyoCoordinate.PRECISION)}, ${TokyoCoordinate.LONGITUDE.toFixed(TokyoCoordinate.PRECISION)}`;
   })
   .setView({
-    lat: TOKYO_LATITUDE,
-    lng: TOKYO_LONGITUDE,
+    lat: TokyoCoordinate.LATITUDE,
+    lng: TokyoCoordinate.LONGITUDE,
   }, 10);
 
-window.L.tileLayer(
+L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
 ).addTo(map);
 
-const mapPinIcon = window.L.icon ({
+const mapPinIcon = L.icon ({
   iconUrl: 'img/main-pin.svg',
   iconSize: [52, 52],
   iconAnchore: [26, 52],
 });
 
-const mapPin = window.L.marker(
+const mapPin = L.marker(
   {
-    lat: TOKYO_LATITUDE,
-    lng: TOKYO_LONGITUDE,
+    lat: TokyoCoordinate.LATITUDE,
+    lng: TokyoCoordinate.LONGITUDE,
   },
   {
     draggable: true,
@@ -54,10 +64,50 @@ mapPin.addTo(map);
 
 mapPin.on('drag', (evt) => {
   const anchorPoint = evt.target.getLatLng();
-  adFormAddress.value = `${anchorPoint.lat.toFixed(COORD_PRECISION)}, ${anchorPoint.lng.toFixed(COORD_PRECISION)}`;
+  adFormAddress.value = `${anchorPoint.lat.toFixed(TokyoCoordinate.PRECISION)}, ${anchorPoint.lng.toFixed(TokyoCoordinate.PRECISION)}`;
 });
 
-getData(ADS_DATA_URL)
+const renderAdPins = (adPins) => {
+  for (let i = 0; i < ADS_MAX_QUANTITY; i++) {
+    if (adPins[i]) {
+      const {lat, lng} = adPins[i];
+
+      const adPinIcon = L.icon ({
+        iconUrl: 'img/pin.svg',
+        iconSize: [40, 40],
+        iconAnchore: [20, 40],
+      });
+
+      const adPin = L.marker(
+        {
+          lat,
+          lng,
+        },
+        {
+          icon: adPinIcon,
+        },
+      );
+
+      adPin
+        .addTo(map)
+        .bindPopup(
+          renderAdCard(adPins[i]),
+        );
+
+      mapFilterForm.addEventListener('change', () => {
+        map.removeLayer(adPin);
+      });
+
+      adFormReset.addEventListener('click', () => {
+        map.removeLayer(adPin);
+      });
+    } else {
+      break;
+    }
+  }
+};
+
+getData(ServerUrl.ADS_DATA)
   .then((ads) => {
     const adPins = [];
 
@@ -66,7 +116,7 @@ getData(ADS_DATA_URL)
         title,
         address,
         price,
-        type: translateApartmentType(type),
+        type: apartmentTypeToRus[type],
         rooms,
         guests,
         checkin,
@@ -80,39 +130,28 @@ getData(ADS_DATA_URL)
       }
     });
 
-    adPins.forEach((element) => {
-      const {lat, lng} = element;
+    renderAdPins(adPins);
 
-      const adPinIcon = window.L.icon ({
-        iconUrl: 'img/pin.svg',
-        iconSize: [40, 40],
-        iconAnchore: [20, 40],
-      });
+    const setFilterChange = () => {
+      const filteredAdPins = getFilteredAds(adPins);
 
-      const adPin = window.L.marker(
-        {
-          lat,
-          lng,
-        },
-        {
-          icon: adPinIcon,
-        },
-      );
+      renderAdPins(filteredAdPins);
+    };
 
-      adPin
-        .addTo(map)
-        .bindPopup(
-          renderAdCard(element),
-        );
-    })
+    mapFilterForm.addEventListener('change', _.debounce(setFilterChange, DEBOUNCE_INTERVAL));
+
+    adFormReset.addEventListener('click', () => {
+      renderAdPins(adPins);
+    });
+
   })
   .then(() => {
     mapFilters.forEach((element) => {
       activateElement(element);
     });
-    activateElement(mapFeaturesBlock);
+    activateElement(featuresFilter);
     activateBlock(mapFilterForm, 'map__filters--disabled');
   })
   .catch(() => showIncomingError(INCOMING_ERROR_MESSAGE));
 
-export {TOKYO_LATITUDE, TOKYO_LONGITUDE, COORD_PRECISION, mapPin};
+export {TokyoCoordinate, ADS_MAX_QUANTITY, mapPin};

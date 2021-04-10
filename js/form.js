@@ -1,16 +1,23 @@
 import {deactivateBlock, deactivateElement} from './deactivator.js';
-import {AD_FORM_URL, sendData} from './server.js';
-import {APARTMENT_TYPES} from './apartment-types.js';
+import {ServerUrl, sendData} from './server.js';
+import {ApartmentType} from './apartment-types.js';
 import {resetPage} from './reset-page.js';
-import {getCorrectEndingWord, showOutcomingMessage} from './util.js';
+import {deleteAttribute, getCorrectEndingWord, showOutcomingMessage} from './util.js';
 
-const MIN_TITLE_LENGTH = 30;
-const MAX_TITLE_LENGTH = 100;
-const MIN_PRICE_PALACE = 10000;
-const MIN_PRICE_FLAT = 1000;
-const MIN_PRICE_HOUSE = 5000;
-const MIN_PRICE_BUNGALOW = 0;
-const MAX_PRICE_VALUE = 1e6;
+const AdTitleLength = {
+  MIN: 30,
+  MAX: 100,
+}
+
+const AdPrice = {
+  MIN: {
+    PALACE: 10000,
+    FLAT: 1000,
+    HOUSE: 5000,
+    BUNGALOW: 0,
+  },
+  MAX: 1e6,
+}
 
 const adForm = document.querySelector('.ad-form');
 adForm.setAttribute('action', 'https://22.javascript.pages.academy/keksobooking');
@@ -24,50 +31,54 @@ adFormElements.forEach((element) => {
   deactivateElement(element);
 });
 
+// title
 const adFormTitle = adForm.querySelector('#title');
 adFormTitle.setAttribute('required', true);
-adFormTitle.setAttribute('minlength', MIN_TITLE_LENGTH);
-adFormTitle.setAttribute('maxlength', MAX_TITLE_LENGTH);
+adFormTitle.setAttribute('minlength', AdTitleLength.MIN);
+adFormTitle.setAttribute('maxlength', AdTitleLength.MAX);
 
 adFormTitle.addEventListener('input', () => {
   const lengthValue = adFormTitle.value.length;
 
-  if (lengthValue < MIN_TITLE_LENGTH) {
-    adFormTitle.setCustomValidity(`Необходимо ввести ещё минимум ${MIN_TITLE_LENGTH - lengthValue} ${getCorrectEndingWord(MIN_TITLE_LENGTH - lengthValue, 'символ', 'символа', 'символов')}`);
-  } else if (lengthValue > MAX_TITLE_LENGTH) {
-    adFormTitle.setCustomValidity(`Сократите заголовок на ${lengthValue - MAX_TITLE_LENGTH} ${getCorrectEndingWord(lengthValue - MAX_TITLE_LENGTH, 'символ', 'символа', 'символов')}`);
+  if (lengthValue < AdTitleLength.MIN) {
+    adFormTitle.setCustomValidity(`Необходимо ввести ещё минимум ${AdTitleLength.MIN - lengthValue} ${getCorrectEndingWord(AdTitleLength.MIN - lengthValue, 'символ', 'символа', 'символов')}`);
+  } else if (lengthValue > AdTitleLength.MAX) {
+    adFormTitle.setCustomValidity(`Сократите заголовок на ${lengthValue - AdTitleLength.MAX} ${getCorrectEndingWord(lengthValue - AdTitleLength.MAX, 'символ', 'символа', 'символов')}`);
   } else {
+    deleteAttribute(adFormTitle, 'style');
     adFormTitle.setCustomValidity('');
   }
 
   adFormTitle.reportValidity();
 });
 
+// address
 const adFormAddress = adForm.querySelector('#address');
 adFormAddress.setAttribute('readonly', true);
 
+// type/price
 const adFormType = adForm.querySelector('#type');
 const adFormPrice = adForm.querySelector('#price');
 adFormPrice.setAttribute('required', true);
-adFormPrice.setAttribute('max', MAX_PRICE_VALUE);
+adFormPrice.setAttribute('max', AdPrice.MAX);
 
 const setAdMinPrice = () => {
   switch (adFormType.value) {
-    case APARTMENT_TYPES[0]:
-      adFormPrice.setAttribute('min', MIN_PRICE_PALACE);
-      adFormPrice.setAttribute('placeholder', MIN_PRICE_PALACE);
+    case ApartmentType.PALACE:
+      adFormPrice.setAttribute('min', AdPrice.MIN.PALACE);
+      adFormPrice.setAttribute('placeholder', AdPrice.MIN.PALACE);
       break;
-    case APARTMENT_TYPES[1]:
-      adFormPrice.setAttribute('min', MIN_PRICE_FLAT);
-      adFormPrice.setAttribute('placeholder', MIN_PRICE_FLAT);
+    case ApartmentType.FLAT:
+      adFormPrice.setAttribute('min', AdPrice.MIN.FLAT);
+      adFormPrice.setAttribute('placeholder', AdPrice.MIN.FLAT);
       break;
-    case APARTMENT_TYPES[2]:
-      adFormPrice.setAttribute('min', MIN_PRICE_HOUSE);
-      adFormPrice.setAttribute('placeholder', MIN_PRICE_HOUSE);
+    case ApartmentType.HOUSE:
+      adFormPrice.setAttribute('min', AdPrice.MIN.HOUSE);
+      adFormPrice.setAttribute('placeholder', AdPrice.MIN.HOUSE);
       break;
-    case APARTMENT_TYPES[3]:
-      adFormPrice.setAttribute('min', MIN_PRICE_BUNGALOW);
-      adFormPrice.setAttribute('placeholder', MIN_PRICE_BUNGALOW);
+    case ApartmentType.BUNGALOW:
+      adFormPrice.setAttribute('min', AdPrice.MIN.BUNGALOW);
+      adFormPrice.setAttribute('placeholder', AdPrice.MIN.BUNGALOW);
       break;
   }
 };
@@ -86,12 +97,14 @@ adFormPrice.addEventListener('input', () => {
   } else if (priceValue > +adFormPrice.max) {
     adFormPrice.setCustomValidity(`Максимальная цена за ночь должна быть не выше ${adFormPrice.max} рублей`);
   } else {
+    deleteAttribute(adFormPrice, 'style');
     adFormPrice.setCustomValidity('');
   }
 
   adFormPrice.reportValidity();
 });
 
+// in/out
 const adFormTimeIn = adForm.querySelector('#timein');
 const adFormTimeOut = adForm.querySelector('#timeout');
 
@@ -106,6 +119,7 @@ const onAdFormTimeOutChange = () => {
 adFormTimeIn.addEventListener('change', onAdFormTimeInChange);
 adFormTimeOut.addEventListener('change',onAdFormTimeOutChange);
 
+// rooms/guests
 const adFormRoomQuantity = adForm.querySelector('#room_number');
 const adFormGuestQuantity = adForm.querySelector('#capacity');
 
@@ -117,6 +131,7 @@ const showRoomOrGuestMessage = (messageLocation, customMessage) => {
   } else if (+adFormRoomQuantity.value !== 100 && +adFormGuestQuantity.value === 0) {
     messageLocation.setCustomValidity('Только для 100 комнат!');
   } else {
+    deleteAttribute(adFormGuestQuantity, 'style');
     messageLocation.setCustomValidity('');
   }
 };
@@ -137,11 +152,30 @@ adForm.addEventListener('click', () => {
   showRoomOrGuestMessage(adFormGuestQuantity, 'Количество гостей не должно превышать количество комнат!');
 });
 
+// reset
 const adFormReset = adForm.querySelector('.ad-form__reset');
 
 adFormReset.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetPage();
+  deleteAttribute(adFormTitle, 'style');
+  deleteAttribute(adFormPrice, 'style');
+  deleteAttribute(adFormGuestQuantity, 'style');
+});
+
+// submit
+const adFormSubmit = adForm.querySelector('.ad-form__submit');
+
+const setInvalidBorder = (formElement) => {
+  formElement.addEventListener('invalid', () => {
+    formElement.style = 'border: 2px solid red';
+  });
+};
+
+adFormSubmit.addEventListener('click', () => {
+  setInvalidBorder(adFormTitle);
+  setInvalidBorder(adFormPrice);
+  setInvalidBorder(adFormGuestQuantity);
 });
 
 adForm.addEventListener('submit', (evt) => {
@@ -149,7 +183,7 @@ adForm.addEventListener('submit', (evt) => {
 
   sendData(
     new FormData(evt.target),
-    AD_FORM_URL,
+    ServerUrl.AD_FORM,
     () => {
       resetPage();
       showOutcomingMessage('#success', '.success');
@@ -160,4 +194,4 @@ adForm.addEventListener('submit', (evt) => {
   );
 });
 
-export {adForm, adFormHeader, adFormElements, adFormAddress};
+export {adForm, adFormHeader, adFormElements, adFormAddress, adFormReset};

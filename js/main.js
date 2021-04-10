@@ -6,4 +6,5 @@ import './render-ad-card.js';
 import './map.js';
 import './filters.js';
 import './form.js';
+import './form-images.js'
 import './reset-page.js';
