@@ -194,4 +194,4 @@ adForm.addEventListener('submit', (evt) => {
   );
 });
 
-export {adForm, adFormHeader, adFormElements, adFormAddress};
+export {adForm, adFormHeader, adFormElements, adFormAddress, adFormReset};
