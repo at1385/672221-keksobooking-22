@@ -1,6 +1,6 @@
 import {deactivateBlock, deactivateElement} from './deactivator.js';
-import {AD_FORM_URL, sendData} from './server.js';
 import {APARTMENT_TYPES} from './apartment-types.js';
+import {ServerUrl, sendData} from './server.js';
 import {resetPage} from './reset-page.js';
 import {getCorrectEndingWord, showOutcomingMessage} from './util.js';
 
@@ -149,7 +149,7 @@ adForm.addEventListener('submit', (evt) => {
 
   sendData(
     new FormData(evt.target),
-    AD_FORM_URL,
+    ServerUrl.AD_FORM,
     () => {
       resetPage();
       showOutcomingMessage('#success', '.success');

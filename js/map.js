@@ -1,6 +1,6 @@
 import {activateBlock, activateElement} from './activator.js';
-import {ADS_DATA_URL, getData} from './server.js';
 import {translateApartmentType} from './apartment-types.js';
+import {ServerUrl, getData} from './server.js';
 import {renderAdCard} from './render-ad-card.js';
 import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
 import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';
@@ -61,6 +61,7 @@ mapPin.on('drag', (evt) => {
 });
 
 getData(ADS_DATA_URL)
+getData(ServerUrl.ADS_DATA)
   .then((ads) => {
     const adPins = [];
 
