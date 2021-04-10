@@ -1,3 +1,6 @@
+/* global L:readonly */
+/* global _:readonly */
+
 import {activateBlock, activateElement} from './activator.js';
 import {ServerUrl, getData} from './server.js';
 import {apartmentTypeToRus} from './apartment-types.js';
@@ -16,7 +19,7 @@ const ADS_MAX_QUANTITY = 10;
 
 const INCOMING_ERROR_MESSAGE = 'Объявления не были загружены. Попробуйте обновить страницу.';
 
-const map = window.L.map('map-canvas')
+const map = L.map('map-canvas')
   .on('load', () => {
     activateElement(adFormHeader);
     adFormElements.forEach((element) => {
@@ -31,20 +34,20 @@ const map = window.L.map('map-canvas')
     lng: TokyoCoordinate.LONGITUDE,
   }, 10);
 
-window.L.tileLayer(
+L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
 ).addTo(map);
 
-const mapPinIcon = window.L.icon ({
+const mapPinIcon = L.icon ({
   iconUrl: 'img/main-pin.svg',
   iconSize: [52, 52],
   iconAnchore: [26, 52],
 });
 
-const mapPin = window.L.marker(
+const mapPin = L.marker(
   {
     lat: TokyoCoordinate.LATITUDE,
     lng: TokyoCoordinate.LONGITUDE,
