@@ -6,9 +6,11 @@ import {mapFilterForm, mapFilters, mapFeaturesBlock} from './filters.js';
 import {adForm, adFormHeader, adFormElements, adFormAddress} from './form.js';
 import {showIncomingError} from './util.js';
 
-const TOKYO_LATITUDE = 35.67100;
-const TOKYO_LONGITUDE = 139.78350;
-const COORD_PRECISION = 5;
+const TokyoCoordinate = {
+  LATITUDE: 35.67100,
+  LONGITUDE: 139.78350,
+  PRECISION: 5,
+}
 
 const ADS_MAX_QUANTITY = 10;
 
@@ -25,8 +27,8 @@ const map = window.L.map('map-canvas')
     adFormAddress.value = `${TOKYO_LATITUDE.toFixed(COORD_PRECISION)}, ${TOKYO_LONGITUDE.toFixed(COORD_PRECISION)}`;
   })
   .setView({
-    lat: TOKYO_LATITUDE,
-    lng: TOKYO_LONGITUDE,
+    lat: TokyoCoordinate.LATITUDE,
+    lng: TokyoCoordinate.LONGITUDE,
   }, 10);
 
 window.L.tileLayer(
@@ -44,8 +46,8 @@ const mapPinIcon = window.L.icon ({
 
 const mapPin = window.L.marker(
   {
-    lat: TOKYO_LATITUDE,
-    lng: TOKYO_LONGITUDE,
+    lat: TokyoCoordinate.LATITUDE,
+    lng: TokyoCoordinate.LONGITUDE,
   },
   {
     draggable: true,
@@ -57,7 +59,7 @@ mapPin.addTo(map);
 
 mapPin.on('drag', (evt) => {
   const anchorPoint = evt.target.getLatLng();
-  adFormAddress.value = `${anchorPoint.lat.toFixed(COORD_PRECISION)}, ${anchorPoint.lng.toFixed(COORD_PRECISION)}`;
+  adFormAddress.value = `${anchorPoint.lat.toFixed(TokyoCoordinate.PRECISION)}, ${anchorPoint.lng.toFixed(TokyoCoordinate.PRECISION)}`;
 });
 
 getData(ADS_DATA_URL)
@@ -119,4 +121,4 @@ getData(ServerUrl.ADS_DATA)
   })
   .catch(() => showIncomingError(INCOMING_ERROR_MESSAGE));
 
-export {TOKYO_LATITUDE, TOKYO_LONGITUDE, COORD_PRECISION, mapPin};
+export {TokyoCoordinate, ADS_MAX_QUANTITY, mapPin};
