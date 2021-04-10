@@ -39,16 +39,18 @@ const showIncomingError = (message) => {
   document.body.appendChild(alertBlock);
 };
 
+const main = document.querySelector('main');
+
 const showOutcomingMessage = (templateId, templateContent) => {
   const messageTemplate = document.querySelector(templateId).content.querySelector(templateContent);
   const message = messageTemplate.cloneNode(true);
 
   message.style.zIndex = 1000;
 
-  document.body.appendChild(message);
+  main.appendChild(message);
 
   const hideOutcomingMessage = () => {
-    document.body.removeChild(message);
+    main.removeChild(message);
     document.removeEventListener('keydown', onOutcomingMessageEscKeydown);
   };
 
