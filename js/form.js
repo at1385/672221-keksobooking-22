@@ -4,13 +4,20 @@ import {ApartmentType} from './apartment-types.js';
 import {resetPage} from './reset-page.js';
 import {getCorrectEndingWord, showOutcomingMessage} from './util.js';
 
-const MIN_TITLE_LENGTH = 30;
-const MAX_TITLE_LENGTH = 100;
-const MIN_PRICE_PALACE = 10000;
-const MIN_PRICE_FLAT = 1000;
-const MIN_PRICE_HOUSE = 5000;
-const MIN_PRICE_BUNGALOW = 0;
-const MAX_PRICE_VALUE = 1e6;
+const AdTitleLength = {
+  MIN: 30,
+  MAX: 100,
+}
+
+const AdPrice = {
+  MIN: {
+    PALACE: 10000,
+    FLAT: 1000,
+    HOUSE: 5000,
+    BUNGALOW: 0,
+  },
+  MAX: 1e6,
+}
 
 const adForm = document.querySelector('.ad-form');
 adForm.setAttribute('action', 'https://22.javascript.pages.academy/keksobooking');
@@ -26,16 +33,16 @@ adFormElements.forEach((element) => {
 
 const adFormTitle = adForm.querySelector('#title');
 adFormTitle.setAttribute('required', true);
-adFormTitle.setAttribute('minlength', MIN_TITLE_LENGTH);
-adFormTitle.setAttribute('maxlength', MAX_TITLE_LENGTH);
+adFormTitle.setAttribute('minlength', AdTitleLength.MIN);
+adFormTitle.setAttribute('maxlength', AdTitleLength.MAX);
 
 adFormTitle.addEventListener('input', () => {
   const lengthValue = adFormTitle.value.length;
 
-  if (lengthValue < MIN_TITLE_LENGTH) {
-    adFormTitle.setCustomValidity(`Необходимо ввести ещё минимум ${MIN_TITLE_LENGTH - lengthValue} ${getCorrectEndingWord(MIN_TITLE_LENGTH - lengthValue, 'символ', 'символа', 'символов')}`);
-  } else if (lengthValue > MAX_TITLE_LENGTH) {
-    adFormTitle.setCustomValidity(`Сократите заголовок на ${lengthValue - MAX_TITLE_LENGTH} ${getCorrectEndingWord(lengthValue - MAX_TITLE_LENGTH, 'символ', 'символа', 'символов')}`);
+  if (lengthValue < AdTitleLength.MIN) {
+    adFormTitle.setCustomValidity(`Необходимо ввести ещё минимум ${AdTitleLength.MIN - lengthValue} ${getCorrectEndingWord(AdTitleLength.MIN - lengthValue, 'символ', 'символа', 'символов')}`);
+  } else if (lengthValue > AdTitleLength.MAX) {
+    adFormTitle.setCustomValidity(`Сократите заголовок на ${lengthValue - AdTitleLength.MAX} ${getCorrectEndingWord(lengthValue - AdTitleLength.MAX, 'символ', 'символа', 'символов')}`);
   } else {
     adFormTitle.setCustomValidity('');
   }
@@ -49,25 +56,25 @@ adFormAddress.setAttribute('readonly', true);
 const adFormType = adForm.querySelector('#type');
 const adFormPrice = adForm.querySelector('#price');
 adFormPrice.setAttribute('required', true);
-adFormPrice.setAttribute('max', MAX_PRICE_VALUE);
+adFormPrice.setAttribute('max', AdPrice.MAX);
 
 const setAdMinPrice = () => {
   switch (adFormType.value) {
-      adFormPrice.setAttribute('min', MIN_PRICE_PALACE);
-      adFormPrice.setAttribute('placeholder', MIN_PRICE_PALACE);
     case ApartmentType.PALACE:
+      adFormPrice.setAttribute('min', AdPrice.MIN.PALACE);
+      adFormPrice.setAttribute('placeholder', AdPrice.MIN.PALACE);
       break;
-      adFormPrice.setAttribute('min', MIN_PRICE_FLAT);
-      adFormPrice.setAttribute('placeholder', MIN_PRICE_FLAT);
     case ApartmentType.FLAT:
+      adFormPrice.setAttribute('min', AdPrice.MIN.FLAT);
+      adFormPrice.setAttribute('placeholder', AdPrice.MIN.FLAT);
       break;
-      adFormPrice.setAttribute('min', MIN_PRICE_HOUSE);
-      adFormPrice.setAttribute('placeholder', MIN_PRICE_HOUSE);
     case ApartmentType.HOUSE:
+      adFormPrice.setAttribute('min', AdPrice.MIN.HOUSE);
+      adFormPrice.setAttribute('placeholder', AdPrice.MIN.HOUSE);
       break;
-      adFormPrice.setAttribute('min', MIN_PRICE_BUNGALOW);
-      adFormPrice.setAttribute('placeholder', MIN_PRICE_BUNGALOW);
     case ApartmentType.BUNGALOW:
+      adFormPrice.setAttribute('min', AdPrice.MIN.BUNGALOW);
+      adFormPrice.setAttribute('placeholder', AdPrice.MIN.BUNGALOW);
       break;
   }
 };
