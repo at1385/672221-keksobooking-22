@@ -1,5 +1,6 @@
-/* global L:readonly */
-/* global _:readonly */
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import debounce from 'lodash/debounce';
 
 import {activateBlock, activateElement} from './activator.js';
 import {ServerUrl, getData} from './server.js';
@@ -138,7 +139,7 @@ getData(ServerUrl.ADS_DATA)
       renderAdPins(filteredAdPins);
     };
 
-    mapFilterForm.addEventListener('change', _.debounce(setFilterChange, DEBOUNCE_INTERVAL));
+    mapFilterForm.addEventListener('change', debounce(setFilterChange, DEBOUNCE_INTERVAL));
 
     adFormReset.addEventListener('click', () => {
       renderAdPins(adPins);
