@@ -5,7 +5,12 @@
 *.pdf
 *.psd
 *.sublime*
-build/
+build/css/leaflet.css
+build/css/leaflet.css.map
+build/img/leaflet
+build/js/main.bundle.js
+build/js/main.bundle.js.LICENSE.txt
+build/js/main.bundle.js.map
 node_modules/
 npm-debug.log*
 Thumbs.db
